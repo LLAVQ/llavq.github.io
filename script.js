@@ -74,3 +74,51 @@ fetch('./data.json')
   .catch(error => {
     console.error('There was a problem with the fetch operation:', error);
   });
+// Function to set cookie
+function setCookie(name, value, days) {
+   const date = new Date();
+   date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+   const expires = "expires=" + date.toUTCString();
+   document.cookie = name + "=" + value + ";" + expires + ";path=/";
+}
+
+// Function to get cookie
+function getCookie(name) {
+   const nameEQ = name + "=";
+   const ca = document.cookie.split(';');
+   for(let i = 0; i < ca.length; i++) {
+       let c = ca[i];
+       while (c.charAt(0) == ' ') c = c.substring(1,c.length);
+       if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+   }
+   return null;
+}
+
+// Function to toggle theme
+function toggleTheme() {
+   const body = document.body;
+
+   // Toggle dark mode class
+   body.classList.toggle("dark-mode");
+
+   // Save preference in cookie
+   if (body.classList.contains("dark-mode")) {
+       setCookie("theme", "dark", 7);
+   } else {
+       setCookie("theme", "light", 7);
+   }
+}
+
+// Check cookie on page load
+window.onload = () => {
+   const theme = getCookie("theme");
+
+    // Set dark mode as default if no cookie is found
+    if (!theme || theme === "dark") {
+        document.body.classList.add("dark-mode");
+        document.getElementById("checkbox").checked = true; // Check the toggle
+    }
+};
+
+// Add event listener to toggle switch
+document.getElementById("checkbox").addEventListener("change", toggleTheme);
