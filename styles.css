@@ -69,7 +69,7 @@ h1 {
 
     .card {
         padding: 15px; /* Adjust padding in cards on mobile */
-        margin: 30vh auto; /* Reduce margin on mobile devices to fit better within viewport */
+        margin: 20vh auto; /* Reduce margin on mobile devices to fit better within viewport */
         max-width: calc(100% - 40px); /* Full width minus some padding on mobile devices */
     }
 }
