@@ -1,7 +1,53 @@
 {
-  "texts": [
-    "Text item 1",
-    "Text item 2",
-    "Text item 3"
+  "posts": [
+    {
+      "title": "Reflections on Friendship",
+      "overview": "A deep exploration of the complexities and uncertainties of friendship.",
+      "content": [
+        "As for me, it seems impossible to understand whether I have a friend or not. I'd say that the whole paradigm of having a friend is controversial. You never can be sure about anything. This is also applicable to friends.",
+        "Who is a friend? I suppose everyone has heard that a friend is someone who is ready to support you in difficult situations, ready to donate his own in order to make you happy. Also, that should work backwards; if it doesn't, then you are a bad person.",
+        "Well, maybe this exact saying is not correct, but it is exactly what I have on my mind about friendship. All of these stereotypes were born during my life experience and reading books.",
+        "So as you are expecting a certain behavior from a certain person, how can you be sure that it will happen as expected? Probably I have a view of the world that is not realistic, but yet it is my view; I'm trying to express it on 'paper' and do it as I can.",
+        "Your friend can do whatever he wants; you are not part of his behavior. He decides what and when to do.",
+        "Yes, you can try to make an agreement that you meet at 10 o'clock; the bad friend will not come, the good one will appear, right? Or what if the 'bad' one had something happen and didn't know that happened when we agreed?",
+        "This communication may just be not reliable, and people love reliability. Maybe it's that I never had a real friend who is smart, supportive, and kind, or maybe I had but didn't notice.",
+        "As I see it, people are different and they change. Also probably the whole universe is not reliable, though that cannot be proved by me.",
+        "For now I am strongly glued to one place; I have it and I am sure I won't get kicked out tomorrow—or am I not sure? This complete uncertainty may just rule my worldview; I should probably lose this type of view.",
+        "How? Reading more books? What books? I'd like to read more and more books but is it that helpful? Couldn't you get all this knowledge by thinking yourself? Will it take more or less time? I don't know.",
+        "Yeah, something about friendship—though it's not; it's about certainty that I don't have. Do you have certainty? What is it built on? What's the foundation?",
+        "Being certain is something random; anything can happen any minute. This certainty lack thought is probably constructing my view; it always in my thoughts has great power and impacts all decisions made.",
+        "I doubt everything; that makes me NOT A FRIEND. I doubt any friendship, knowing that anything may be used against me. Risk?",
+        "What is risk for? You may benefit or not. You may be broken or stronger than ever was. Is it just a part of life?",
+        "I went on a frozen lake not knowing the temperature of air and I didn't drown—why? Before that I wasn't struck by lightning or got in a car accident. So many things happened to me and I am still alive.",
+        "How? I was swimming from one end to another and a man who jumped and didn't see me struck my head; I am still alive. I am angry at that man and scared of consequences.",
+        "I am always scared of consequences. They may appear from thin air—even from something that has nothing to do with me.",
+        "So why is something happening exactly as it is happening? All events that might get me here writing this text—how? What is gonna happen after?",
+        "Why should I invest in my skills and knowledge if not only to compete and in most cases be defeated? I never knew what it's like to win.",
+        "'To win what and why?' - that's what I should ask. Why should I win is probably the best question. I have no idea unless getting a great dopamine dose and someone's respect.",
+        "I need respect to have friends (probably).",
+        "I thought and still think that the man should do what he'd like to but the man likes what he knows how to do or what he was addicted to because of someone who taught him that.",
+        "You cannot ever be sure that you wouldn't like to do something else—like a subject that was taught poorly and you have this feeling of disgust toward it or just thinking it's not your type of things but it actually can be just your type of things because why not?",
+        "Not all what you think is true. It just may be some obstacles—poor memories, connections, thoughts, and/or bad luck...",
+        "I should end; this text is not for my friend—I suppose it's for a greater audience :)"
+      ],
+      "author": "HUMAN"
+    },
+    {
+      "title": "The Journey of Self-Discovery",
+      "overview": "A personal exploration of the journey toward understanding oneself and the challenges faced along the way.",
+      "content": [
+        "Self-discovery is a journey that many embark on, yet few truly understand. It is not merely about finding out who you are, but rather about exploring the depths of your being.",
+        "Throughout life, we encounter various experiences that shape our identity. These experiences can be enlightening, painful, or even confusing.",
+        "One of the most significant challenges in this journey is overcoming societal expectations. We often find ourselves conforming to what others believe we should be.",
+        "However, true growth comes from embracing our uniqueness and allowing ourselves to be vulnerable.",
+        "The process of self-discovery requires patience and introspection. It involves asking difficult questions and facing uncomfortable truths.",
+        "In moments of solitude, we can reflect on our values, passions, and fears. This reflection is crucial for personal growth.",
+        "As we navigate through life, we must remember that self-discovery is not a destination but a continuous process.",
+        "Embracing change is essential; it allows us to evolve and adapt as we learn more about ourselves.",
+        "Ultimately, the journey of self-discovery leads to greater fulfillment and authenticity in our lives.",
+        "It is a path worth taking, filled with lessons that shape who we are meant to become."
+      ],
+      "author": "AI"
+    }
   ]
 }
