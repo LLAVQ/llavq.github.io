@@ -37,10 +37,49 @@ h1 {
     text-decoration: none;
 }
 
-/* Card Styles */
-.card {
-   margin-top: 60px; /* Space below sticky header */
+/* Welcome Section Styles */
+.welcome {
+   text-align: center;
+   padding: 40px; /* Increased padding for better spacing */
+   background-color: #f4f4f4; /* Light background for welcome section */
+   margin-top: 10vh; /* Space below sticky header */
+   height: 60vh;
+}
+
+.welcome h2 {
+   font-size: 28px; /* Larger font size for welcome title */
+   margin-bottom: 10px;
+}
+
+.welcome p {
+   font-size: 18px; /* Slightly larger font size for welcome text */
+   color: #555;
+}
+
+/* Blog Posts Section */
+#postsContainer {
+   max-width: 800px; /* Set a maximum width for the posts container */
+   margin-left: auto; /* Center horizontally */
+   margin-right: auto; /* Center horizontally */
    padding: 20px;
+   margin-top: 20vh; /* Space below sticky header */
+}
+
+/* Article Styles */
+.post {
+   background-color: #f9f9f9; /* Light background for post */
+   border-radius: 8px; /* Rounded corners */
+   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+   margin-bottom: 20px; /* Space between posts */
+   padding: 15px; /* Padding inside each post */
+}
+
+.post h3 {
+   margin-top: 10px;
+}
+
+.post p {
+   margin-bottom:5 px.
 }
 
 /* Modal styles */
@@ -60,7 +99,7 @@ h1 {
    background-color: #fefefe;
    margin: 15% auto; /* Centered */
    padding: 20px;
-   border: 1px solid #888;
+   border-radius: 8px; /* Rounded corners for modal content */
    width: 80%; /* Could be more or less depending on screen size */
 }
 
@@ -78,19 +117,23 @@ h1 {
    cursor: pointer;
 }
 
-/* Additional styles for posts */
-.post {
-   margin-bottom: 20px; /* Space between posts */
-}
+/* Responsive Styles */
+@media (max-width: 600px) {
+    .welcome h2 {
+        font-size: 24px; /* Smaller font size for mobile welcome title */
+    }
 
-.post h3 {
-   margin: 10px 0; /* Space around titles */
-}
+    .welcome p {
+        font-size: 16px; /* Smaller font size for mobile welcome text */
+    }
 
-.post p {
-   margin: 5px 0; /* Space around paragraphs */
-}
+    #postsContainer {
+        padding-left: 10px;
+        padding-right:10 px
+        margin-top :15vh
+    }
 
-.post button {
-   margin-top: 10px; /* Space above button */
+    .post h3 {
+        font-size :18 px
+    }
 }

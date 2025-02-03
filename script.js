@@ -18,21 +18,20 @@ fetch('./data.json')
       const title = document.createElement('h3');
       title.textContent = post.title; // Set the title text
 
-      // Create author element
-      const author = document.createElement('p');
-      author.textContent = `Author: ${post.author}`; // Set author text
-      author.classList.add('author'); // Optional: add class for styling
+      // Create author mark
+      const author_mark = document.createElement('p');
+      author_mark.textContent = "Written by " + post.author;
 
       // Create overview element
       const overview = document.createElement('p');
-      overview.textContent = post.overview; // Set overview text
+      overview.textContent = post.overview; // Set the overview text
 
       // Append elements to postDiv
       postDiv.appendChild(title);
-      postDiv.appendChild(author); // Append author below title
+      postDiv.appendChild(author_mark)
       postDiv.appendChild(overview);
 
-      // Add button for modal functionality
+      // Add a button to open the modal with full content
       const readButton = document.createElement('button');
       readButton.textContent = 'Read More';
 
