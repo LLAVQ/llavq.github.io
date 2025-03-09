@@ -15,6 +15,10 @@ h1 {
     margin: 0;
 }
 
+.welcome_p {
+    color: #FFFFF;
+}
+
 /* Sticky Header Styles */
 .sticky-header {
     position: sticky;

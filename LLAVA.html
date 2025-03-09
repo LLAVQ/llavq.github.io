@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Falling Bubbles</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            position: relative;
+            align-items: center;
+            height: 100vh;
+        }
+        #start-btn {
+            font-size: 17px;
+            padding: 20px;
+            background-color: grey;
+            color: white;
+            border-radius: 10px;
+        }
+        #start-btn:hover {
+            background-color: black;
+            cursor: cell; 
+        }
+        .circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%; /* Makes the div circular */
+            background-color: lightblue;
+            color: black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute; /* Position absolute for random placement */
+            cursor: pointer;
+            transition: transform 0.3s; /* Animation effect */
+        }
+
+        .circle:hover {
+            transform: scale(1.1); /* Scale effect on hover */
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            color: black;
+            border: 2px solid #333;
+            border-radius: 10px;
+            padding: 17px;
+            font-size: 30px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .popup.active {
+            display: block; /* Show popup when active */
+            animation: fadeIn 0.5s; /* Fade-in animation */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        } 
+    </style>
+</head>
+<body>
+    <header class="sticky-header">
+        <h1><a href="index.html" class="logo">LLAVQ</a></h1>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="index.html">INTRO</a></li>
+                <li><a href="blog.html">BLOG</a></li>
+                <li><a href="LLAVA.html">LLAVA</a></li>
+            </ul>
+        </nav>
+        <div class="theme-switch-wrapper">
+            <label class="theme-switch" for="checkbox">
+                <input type="checkbox" id="checkbox" />
+                <div class="slider round"></div>
+            </label>
+        </div>
+    </header>
+    <button id="start-btn">SEE THE TEST A VERSION OF LLAVQ</button>
+    <div class="text" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 24px; text-align: center;"></div>
+    <div id="popup" class="popup"></div>
+
+    <script src="script.js"></script>
+    <script src="script_llavq.js"></script>
+</body>
+</html>
