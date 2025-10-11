@@ -3,152 +3,640 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Role and Importance of Environmental Development Indicators</title>
+  <title>Environmental Development Indicators</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <style>
+    :root {
+      --primary: #2e7d32;
+      --primary-dark: #1b5e20;
+      --secondary: #43a047;
+      --light: #e8f5e9;
+      --dark: #2e2e2e;
+      --gray: #757575;
+      --white: #ffffff;
+      --shadow: 0 4px 6px rgba(0,0,0,0.1);
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
-      background: linear-gradient(180deg, #e8f5e9, #ffffff);
-      color: #2e2e2e;
+      background: linear-gradient(135deg, var(--light), #f5f5f5);
+      color: var(--dark);
       overflow-x: hidden;
+      line-height: 1.6;
     }
+
     header {
-      background: #2e7d32;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
       color: white;
-      padding: 1rem 2rem;
+      padding: 1.5rem 2rem;
       position: sticky;
       top: 0;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      z-index: 10;
+      z-index: 100;
+      box-shadow: var(--shadow);
     }
+
     header h1 {
-      font-size: 1.2rem;
+      font-size: 1.5rem;
       margin: 0;
+      font-weight: 600;
     }
+
+    .subtitle {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
     .slide {
       display: none;
-      padding: 4rem 2rem;
+      padding: 3rem 2rem;
       min-height: 100vh;
       box-sizing: border-box;
       text-align: center;
+      position: relative;
     }
+
     .slide.active {
-      display: block;
-      animation: fadeIn 0.6s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      animation: slideIn 0.8s ease;
     }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(30px); }
       to { opacity: 1; transform: translateY(0); }
     }
+
     h2 {
-      color: #1b5e20;
+      color: var(--primary-dark);
+      margin-bottom: 2rem;
+      font-size: 2.5rem;
+      position: relative;
+      display: inline-block;
+    }
+
+    h2:after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 4px;
+      background: var(--secondary);
+      border-radius: 2px;
+    }
+
+    p {
+      max-width: 800px;
+      margin: 1rem auto;
+      line-height: 1.8;
+      font-size: 1.1rem;
+      color: var(--dark);
+    }
+
+    .intro-text {
+      font-size: 1.3rem;
+      color: var(--primary-dark);
+      font-weight: 500;
+      max-width: 900px;
+      margin: 0 auto 2rem;
+    }
+
+    .card-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+      text-align: center;
+      border-left: 4px solid var(--secondary);
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    }
+
+    .card h3 {
+      color: var(--primary);
+      margin-bottom: 1rem;
+      font-size: 1.4rem;
+    }
+
+    .card p {
+      margin: 0.8rem 0;
+      font-size: 1rem;
+    }
+
+    .icon {
+      font-size: 3rem;
+      color: var(--secondary);
       margin-bottom: 1rem;
     }
-    p {
-      max-width: 700px;
-      margin: 0.5rem auto;
-      line-height: 1.6;
-      font-size: 1.1rem;
+
+    .method-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
     }
+
+    .method-card {
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: var(--shadow);
+      text-align: center;
+      width: 280px;
+      transition: var(--transition);
+    }
+
+    .method-card:hover {
+      transform: scale(1.05);
+    }
+
+    .image-container {
+      width: 100%;
+      height: 180px;
+      background: linear-gradient(45deg, #e0f2f1, #bbdefb);
+      border-radius: 8px;
+      margin: 1rem 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      color: var(--primary);
+    }
+
     .nav-buttons {
       position: fixed;
-      bottom: 20px;
-      right: 20px;
+      bottom: 30px;
+      right: 30px;
       display: flex;
-      gap: 10px;
+      gap: 15px;
+      z-index: 100;
     }
-    button {
-      background: #43a047;
+
+    .nav-btn {
+      background: var(--secondary);
       color: white;
       border: none;
-      padding: 0.6rem 1rem;
-      border-radius: 8px;
+      padding: 1rem 1.5rem;
+      border-radius: 50px;
       font-size: 1rem;
       cursor: pointer;
-      transition: background 0.3s;
+      transition: var(--transition);
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
-    button:hover {
-      background: #2e7d32;
+
+    .nav-btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
     }
+
     .print-btn {
-      position: fixed;
-      bottom: 20px;
-      left: 20px;
       background: #1976d2;
+      position: fixed;
+      bottom: 30px;
+      left: 30px;
+      z-index: 100;
+    }
+
+    .print-btn:hover {
+      background: #0d47a1;
+    }
+
+    .slide-counter {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255,255,255,0.9);
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      color: var(--dark);
+      box-shadow: var(--shadow);
+    }
+
+    .example-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .example-card {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .example-card h4 {
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .data-table {
+      max-width: 800px;
+      margin: 2rem auto;
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+
+    th {
+      background: var(--primary);
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background: #f9f9f9;
+    }
+
+    .visualization {
+      max-width: 800px;
+      margin: 2rem auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .chart-placeholder {
+      width: 100%;
+      height: 300px;
+      background: linear-gradient(45deg, #e8f5e9, #c8e6c9);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      color: var(--primary-dark);
+    }
+
+    .footer-note {
+      margin-top: 2rem;
+      font-style: italic;
+      color: var(--gray);
+      font-size: 0.9rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        gap: 0.5rem;
+        text-align: center;
+      }
+      
+      h2 {
+        font-size: 2rem;
+      }
+      
+      .nav-buttons {
+        bottom: 100px;
+        right: 20px;
+        flex-direction: column;
+      }
+      
+      .slide {
+        padding: 2rem 1rem;
+      }
     }
   </style>
 </head>
 <body>
   <header>
-    <h1>Role and Importance of Environmental Development Indicators</h1>
-    <span>Presentation Format</span>
+    <h1><i class="fas fa-leaf"></i> Environmental Development Indicators</h1>
+    <div class="subtitle">Understanding, Measuring, and Preserving Our Planet</div>
   </header>
 
   <div id="slides">
+    <!-- Slide 1: Introduction -->
     <section class="slide active">
       <h2>Introduction</h2>
-      <p>Environmental development indicators are tools for assessing the ecological state and sustainability of regions, cities, and ecosystems. They allow scientists and policymakers to track progress, identify problems, and make informed decisions to protect the environment.</p>
+      <p class="intro-text">Environmental development indicators serve as vital tools for assessing the health and sustainability of our ecosystems, enabling informed decision-making for a sustainable future.</p>
+      <div class="card-container">
+        <div class="card">
+          <div class="icon"><i class="fas fa-chart-line"></i></div>
+          <h3>Monitoring Tools</h3>
+          <p>Quantitative measures that track environmental conditions over time</p>
+        </div>
+        <div class="card">
+          <div class="icon"><i class="fas fa-balance-scale"></i></div>
+          <h3>Decision Support</h3>
+          <p>Provide data for policy makers and environmental managers</p>
+        </div>
+        <div class="card">
+          <div class="icon"><i class="fas fa-eye"></i></div>
+          <h3>Early Warning</h3>
+          <p>Identify environmental problems before they become critical</p>
+        </div>
+      </div>
     </section>
 
+    <!-- Slide 2: Sustainable Development -->
     <section class="slide">
-      <h2>What Is Sustainable Development?</h2>
-      <p>Sustainable development is a balanced process of economic growth, social progress, and environmental protection that ensures the needs of the present without compromising the ability of future generations to meet their own needs.</p>
-      <p>It relies on three pillars: economy, society, and environment — in equilibrium.</p>
+      <h2>Sustainable Development Framework</h2>
+      <p>Sustainable development integrates economic growth, social equity, and environmental protection to meet present needs without compromising future generations.</p>
+      <div class="card-container">
+        <div class="card">
+          <div class="icon"><i class="fas fa-dollar-sign"></i></div>
+          <h3>Economic</h3>
+          <p>Sustainable economic practices and green growth</p>
+        </div>
+        <div class="card">
+          <div class="icon"><i class="fas fa-users"></i></div>
+          <h3>Social</h3>
+          <p>Equitable access to resources and opportunities</p>
+        </div>
+        <div class="card">
+          <div class="icon"><i class="fas fa-tree"></i></div>
+          <h3>Environmental</h3>
+          <p>Preservation of ecosystems and biodiversity</p>
+        </div>
+      </div>
     </section>
 
+    <!-- Slide 3: Role of Indicators -->
     <section class="slide">
-      <h2>Role of Environmental Development Indicators</h2>
-      <p>The role of indicators is to measure and monitor the state of natural systems and the impact of human activities. They help identify changes, risks, and trends in the environment and enable governments to plan sustainable development strategies.</p>
-      <p><strong>In essence:</strong> they show what is happening and why it matters.</p>
+      <h2>Role of Environmental Indicators</h2>
+      <p>Environmental indicators provide measurable parameters that help us understand the state of our environment and the impact of human activities.</p>
+      <div class="example-container">
+        <div class="example-card">
+          <h4>Assessment</h4>
+          <p>Measure current environmental conditions</p>
+        </div>
+        <div class="example-card">
+          <h4>Trend Analysis</h4>
+          <p>Track changes over time</p>
+        </div>
+        <div class="example-card">
+          <h4>Policy Support</h4>
+          <p>Inform decision-making processes</p>
+        </div>
+        <div class="example-card">
+          <h4>Communication</h4>
+          <p>Share environmental information with stakeholders</p>
+        </div>
+      </div>
     </section>
 
+    <!-- Slide 4: Importance -->
     <section class="slide">
-      <h2>Importance of Environmental Development Indicators</h2>
-      <p>The importance lies in their ability to provide reliable data for decision-making and forecasting. They make it possible to evaluate ecological policies, predict crises, and find effective solutions for nature conservation and human well-being.</p>
+      <h2>Importance of Environmental Indicators</h2>
+      <p>These indicators are crucial for evidence-based environmental management and sustainable development planning.</p>
+      <div class="card-container">
+        <div class="card">
+          <div class="icon"><i class="fas fa-bell"></i></div>
+          <h3>Early Warning</h3>
+          <p>Detect environmental degradation before irreversible damage</p>
+        </div>
+        <div class="card">
+          <div class="icon"><i class="fas fa-target"></i></div>
+          <h3>Goal Setting</h3>
+          <p>Establish measurable targets for environmental improvement</p>
+        </div>
+        <div class="card">
+          <div class="icon"><i class="fas fa-clipboard-check"></i></div>
+          <h3>Progress Tracking</h3>
+          <p>Monitor the effectiveness of environmental policies</p>
+        </div>
+      </div>
     </section>
 
+    <!-- Slide 5: Key Environmental Indicators -->
     <section class="slide">
-      <h2>Key Indicators</h2>
-      <p>1. <strong>Air Quality:</strong> Concentrations of CO₂, NOₓ, SO₂, PM2.5, PM10.<br>
-      2. <strong>Water Quality:</strong> Levels of heavy metals, nitrates, phosphates, pH, biological oxygen demand.<br>
-      3. <strong>Soil Condition:</strong> Organic content, heavy metals, pesticides, pH, microbial activity.<br>
-      4. <strong>Biodiversity:</strong> Number of species, bioindicators, and ecosystem stability.<br>
-      5. <strong>Waste Management:</strong> Amount of waste generated and recycled.<br>
-      6. <strong>Energy Efficiency:</strong> Share of renewable sources, energy consumption per capita.</p>
+      <h2>Key Environmental Indicators</h2>
+      <p>Comprehensive indicators covering all aspects of environmental health and human impact.</p>
+      <div class="data-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th>Indicator</th>
+              <th>Measurement</th>
+              <th>Example Threshold</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Air Quality</td>
+              <td>PM2.5 Concentration</td>
+              <td>μg/m³</td>
+              <td>< 15 μg/m³ (annual average)</td>
+            </tr>
+            <tr>
+              <td>Water Quality</td>
+              <td>pH Level</td>
+              <td>Scale 0-14</td>
+              <td>6.5 - 8.5</td>
+            </tr>
+            <tr>
+              <td>Soil Health</td>
+              <td>Organic Carbon</td>
+              <td>% by weight</td>
+              <td>> 2% for healthy soil</td>
+            </tr>
+            <tr>
+              <td>Biodiversity</td>
+              <td>Species Richness</td>
+              <td>Number of species</td>
+              <td>Stable or increasing trend</td>
+            </tr>
+            <tr>
+              <td>Climate</td>
+              <td>CO₂ Concentration</td>
+              <td>ppm</td>
+              <td>< 450 ppm (target)</td>
+            </tr>
+            <tr>
+              <td>Waste</td>
+              <td>Recycling Rate</td>
+              <td>% of total waste</td>
+              <td>> 50% target</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </section>
 
+    <!-- Slide 6: Analysis Methods -->
     <section class="slide">
-      <h2>Analytical Methods</h2>
-      <p>Environmental indicators are studied using physical and chemical methods, including:</p>
-      <ul style="text-align:left; display:inline-block;">
-        <li><strong>Spectroscopy</strong> — determining chemical composition.</li>
-        <li><strong>Chromatography</strong> — separating and identifying complex mixtures.</li>
-        <li><strong>Chemical analysis</strong> — determining concentration of pollutants.</li>
-        <li><strong>Gravimetric and titrimetric methods</strong> — mass and volume-based quantification.</li>
-        <li><strong>Biological assays</strong> — studying toxicity and bioaccumulation.</li>
-      </ul>
+      <h2>Analysis Methods & Technologies</h2>
+      <p>Advanced scientific methods and technologies used to analyze environmental indicators.</p>
+      <div class="method-container">
+        <div class="method-card">
+          <div class="image-container">
+            <i class="fas fa-microscope"></i>
+          </div>
+          <h3>Spectroscopy</h3>
+          <p>Measures light absorption to identify chemical composition in air, water, and soil samples.</p>
+        </div>
+        <div class="method-card">
+          <div class="image-container">
+            <i class="fas fa-flask"></i>
+          </div>
+          <h3>Chromatography</h3>
+          <p>Separates and identifies complex mixtures of pollutants and chemicals.</p>
+        </div>
+        <div class="method-card">
+          <div class="image-container">
+            <i class="fas fa-satellite"></i>
+          </div>
+          <h3>Remote Sensing</h3>
+          <p>Uses satellite data to monitor deforestation, urban expansion, and climate changes.</p>
+        </div>
+        <div class="method-card">
+          <div class="image-container">
+            <i class="fas fa-dna"></i>
+          </div>
+          <h3>Biological Assays</h3>
+          <p>Tests toxicity levels and bioaccumulation in living organisms.</p>
+        </div>
+      </div>
     </section>
 
+    <!-- Slide 7: Data Processing -->
     <section class="slide">
-      <h2>Data Processing and Interpretation</h2>
-      <p>After laboratory analysis, results undergo statistical treatment. Data are compared to environmental standards, visualized as graphs or maps, and interpreted to identify pollution sources and predict future changes.</p>
-      <p>Digital tools (GIS, modeling, machine learning) enhance precision and help build sustainable solutions.</p>
+      <h2>Data Processing & Interpretation</h2>
+      <p>Transforming raw data into actionable insights through advanced analytical techniques.</p>
+      <div class="visualization">
+        <h3>Environmental Data Analysis Pipeline</h3>
+        <div class="chart-placeholder">
+          <div>
+            <i class="fas fa-sync fa-spin"></i><br>
+            Sample Data Processing Visualization
+          </div>
+        </div>
+        <p>GIS mapping, statistical analysis, and machine learning enhance precision and predictive capabilities.</p>
+      </div>
     </section>
 
+    <!-- Slide 8: Real-World Examples -->
+    <section class="slide">
+      <h2>Real-World Applications</h2>
+      <p>Practical examples of environmental indicators in action around the world.</p>
+      <div class="example-container">
+        <div class="example-card">
+          <h4>Amazon Rainforest</h4>
+          <p>Deforestation rates tracked via satellite imagery to monitor forest cover changes.</p>
+        </div>
+        <div class="example-card">
+          <h4>Beijing Air Quality</h4>
+          <p>Real-time PM2.5 monitoring alerts citizens and guides pollution control measures.</p>
+        </div>
+        <div class="example-card">
+          <h4>Great Barrier Reef</h4>
+          <p>Water temperature and pH levels monitored to assess coral bleaching risks.</p>
+        </div>
+        <div class="example-card">
+          <h4>European Water Bodies</h2>
+          <p>EU Water Framework Directive uses indicators to assess river and lake health.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 9: Future Trends -->
+    <section class="slide">
+      <h2>Future of Environmental Monitoring</h2>
+      <p>Emerging technologies and approaches for more comprehensive environmental assessment.</p>
+      <div class="card-container">
+        <div class="card">
+          <div class="icon"><i class="fas fa-robot"></i></div>
+          <h3>AI & Machine Learning</h3>
+          <p>Predictive models for environmental risk assessment</p>
+        </div>
+        <div class="card">
+          <div class="icon"><i class="fas fa-mobile-alt"></i></div>
+          <h3>Citizen Science</h3>
+          <p>Mobile apps enabling public participation in data collection</p>
+        </div>
+        <div class="card">
+          <div class="icon"><i class="fas fa-solar-panel"></i></div>
+          <h3>IoT Sensors</h3>
+          <p>Real-time monitoring networks for continuous data collection</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 10: Conclusion -->
     <section class="slide">
       <h2>Conclusion</h2>
-      <p>Environmental development indicators play a crucial role in understanding and preserving our planet. Their significance lies in their ability to transform scientific data into actions that ensure a sustainable future.</p>
-      <p>By analyzing, interpreting, and applying these indicators, humanity can balance progress and ecological integrity.</p>
+      <p class="intro-text">Environmental development indicators are essential tools for understanding our planet's health and guiding sustainable development.</p>
+      <div class="card-container">
+        <div class="card">
+          <div class="icon"><i class="fas fa-lightbulb"></i></div>
+          <h3>Informed Decisions</h3>
+          <p>Transform data into actionable environmental policies</p>
+        </div>
+        <div class="card">
+          <div class="icon"><i class="fas fa-shield-alt"></i></div>
+          <h3>Planetary Health</h3>
+          <p>Protect ecosystems for current and future generations</p>
+        </div>
+        <div class="card">
+          <div class="icon"><i class="fas fa-seedling"></i></div>
+          <h3>Sustainable Future</h3>
+          <p>Balancing human needs with environmental preservation</p>
+        </div>
+      </div>
+      <p class="footer-note">Environmental indicators: The foundation for evidence-based environmental stewardship</p>
     </section>
   </div>
 
   <div class="nav-buttons">
-    <button id="prev">◀ Prev</button>
-    <button id="next">Next ▶</button>
+    <button id="prev" class="nav-btn"><i class="fas fa-arrow-left"></i> Prev</button>
+    <button id="next" class="nav-btn">Next <i class="fas fa-arrow-right"></i></button>
   </div>
-  <button class="print-btn" onclick="window.print()">🖨️ Print / PDF</button>
+  <button class="print-btn nav-btn" onclick="window.print()"><i class="fas fa-print"></i> Print / PDF</button>
+  <div class="slide-counter" id="counter">1 / 10</div>
 
   <script>
     const slides = document.querySelectorAll('.slide');
@@ -156,6 +644,7 @@
 
     function showSlide(i) {
       slides.forEach((s, idx) => s.classList.toggle('active', idx === i));
+      document.getElementById('counter').textContent = `${i + 1} / ${slides.length}`;
     }
 
     document.getElementById('next').addEventListener('click', () => {
@@ -172,6 +661,28 @@
       if (e.key === 'ArrowRight') document.getElementById('next').click();
       if (e.key === 'ArrowLeft') document.getElementById('prev').click();
     });
+
+    // Add touch swipe support for mobile
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    document.addEventListener('touchstart', e => {
+      touchStartX = e.changedTouches[0].screenX;
+    });
+
+    document.addEventListener('touchend', e => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    });
+
+    function handleSwipe() {
+      const swipeThreshold = 50;
+      if (touchEndX < touchStartX - swipeThreshold) {
+        document.getElementById('next').click();
+      } else if (touchEndX > touchStartX + swipeThreshold) {
+        document.getElementById('prev').click();
+      }
+    }
   </script>
 </body>
 </html>
