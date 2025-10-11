@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Role and Importance of Environmental Development Indicators</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      background: linear-gradient(180deg, #e8f5e9, #ffffff);
+      color: #2e2e2e;
+      overflow-x: hidden;
+    }
+    header {
+      background: #2e7d32;
+      color: white;
+      padding: 1rem 2rem;
+      position: sticky;
+      top: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 10;
+    }
+    header h1 {
+      font-size: 1.2rem;
+      margin: 0;
+    }
+    .slide {
+      display: none;
+      padding: 4rem 2rem;
+      min-height: 100vh;
+      box-sizing: border-box;
+      text-align: center;
+    }
+    .slide.active {
+      display: block;
+      animation: fadeIn 0.6s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    h2 {
+      color: #1b5e20;
+      margin-bottom: 1rem;
+    }
+    p {
+      max-width: 700px;
+      margin: 0.5rem auto;
+      line-height: 1.6;
+      font-size: 1.1rem;
+    }
+    .nav-buttons {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      display: flex;
+      gap: 10px;
+    }
+    button {
+      background: #43a047;
+      color: white;
+      border: none;
+      padding: 0.6rem 1rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #2e7d32;
+    }
+    .print-btn {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background: #1976d2;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Role and Importance of Environmental Development Indicators</h1>
+    <span>Presentation Format</span>
+  </header>
+
+  <div id="slides">
+    <section class="slide active">
+      <h2>Introduction</h2>
+      <p>Environmental development indicators are tools for assessing the ecological state and sustainability of regions, cities, and ecosystems. They allow scientists and policymakers to track progress, identify problems, and make informed decisions to protect the environment.</p>
+    </section>
+
+    <section class="slide">
+      <h2>What Is Sustainable Development?</h2>
+      <p>Sustainable development is a balanced process of economic growth, social progress, and environmental protection that ensures the needs of the present without compromising the ability of future generations to meet their own needs.</p>
+      <p>It relies on three pillars: economy, society, and environment — in equilibrium.</p>
+    </section>
+
+    <section class="slide">
+      <h2>Role of Environmental Development Indicators</h2>
+      <p>The role of indicators is to measure and monitor the state of natural systems and the impact of human activities. They help identify changes, risks, and trends in the environment and enable governments to plan sustainable development strategies.</p>
+      <p><strong>In essence:</strong> they show what is happening and why it matters.</p>
+    </section>
+
+    <section class="slide">
+      <h2>Importance of Environmental Development Indicators</h2>
+      <p>The importance lies in their ability to provide reliable data for decision-making and forecasting. They make it possible to evaluate ecological policies, predict crises, and find effective solutions for nature conservation and human well-being.</p>
+    </section>
+
+    <section class="slide">
+      <h2>Key Indicators</h2>
+      <p>1. <strong>Air Quality:</strong> Concentrations of CO₂, NOₓ, SO₂, PM2.5, PM10.<br>
+      2. <strong>Water Quality:</strong> Levels of heavy metals, nitrates, phosphates, pH, biological oxygen demand.<br>
+      3. <strong>Soil Condition:</strong> Organic content, heavy metals, pesticides, pH, microbial activity.<br>
+      4. <strong>Biodiversity:</strong> Number of species, bioindicators, and ecosystem stability.<br>
+      5. <strong>Waste Management:</strong> Amount of waste generated and recycled.<br>
+      6. <strong>Energy Efficiency:</strong> Share of renewable sources, energy consumption per capita.</p>
+    </section>
+
+    <section class="slide">
+      <h2>Analytical Methods</h2>
+      <p>Environmental indicators are studied using physical and chemical methods, including:</p>
+      <ul style="text-align:left; display:inline-block;">
+        <li><strong>Spectroscopy</strong> — determining chemical composition.</li>
+        <li><strong>Chromatography</strong> — separating and identifying complex mixtures.</li>
+        <li><strong>Chemical analysis</strong> — determining concentration of pollutants.</li>
+        <li><strong>Gravimetric and titrimetric methods</strong> — mass and volume-based quantification.</li>
+        <li><strong>Biological assays</strong> — studying toxicity and bioaccumulation.</li>
+      </ul>
+    </section>
+
+    <section class="slide">
+      <h2>Data Processing and Interpretation</h2>
+      <p>After laboratory analysis, results undergo statistical treatment. Data are compared to environmental standards, visualized as graphs or maps, and interpreted to identify pollution sources and predict future changes.</p>
+      <p>Digital tools (GIS, modeling, machine learning) enhance precision and help build sustainable solutions.</p>
+    </section>
+
+    <section class="slide">
+      <h2>Conclusion</h2>
+      <p>Environmental development indicators play a crucial role in understanding and preserving our planet. Their significance lies in their ability to transform scientific data into actions that ensure a sustainable future.</p>
+      <p>By analyzing, interpreting, and applying these indicators, humanity can balance progress and ecological integrity.</p>
+    </section>
+  </div>
+
+  <div class="nav-buttons">
+    <button id="prev">◀ Prev</button>
+    <button id="next">Next ▶</button>
+  </div>
+  <button class="print-btn" onclick="window.print()">🖨️ Print / PDF</button>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    let index = 0;
+
+    function showSlide(i) {
+      slides.forEach((s, idx) => s.classList.toggle('active', idx === i));
+    }
+
+    document.getElementById('next').addEventListener('click', () => {
+      index = (index + 1) % slides.length;
+      showSlide(index);
+    });
+
+    document.getElementById('prev').addEventListener('click', () => {
+      index = (index - 1 + slides.length) % slides.length;
+      showSlide(index);
+    });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight') document.getElementById('next').click();
+      if (e.key === 'ArrowLeft') document.getElementById('prev').click();
+    });
+  </script>
+</body>
+</html>
