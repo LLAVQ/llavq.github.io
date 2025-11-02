@@ -18,9 +18,19 @@
             box-shadow: 0 0 20px rgba(255, 255, 255, 0.7);
             animation: glow-animation 1.5s infinite alternate;
         }
+        .arrow {
+            display: inline-block;
+            font-size: 1.5em;
+            animation: breathe 1.5s infinite alternate;
+            color: yellow; /* Change the color of the arrows */
+        }
         @keyframes glow-animation {
             0% { box-shadow: 0 0 10px rgba(255, 255, 255, 0.5); }
             100% { box-shadow: 0 0 20px rgba(255, 255, 255, 1); }
+        }
+        @keyframes breathe {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.5); }
         }
     </style>
 </head>
@@ -47,8 +57,10 @@
         <p>Your go-to resource for all things related to LLaVA and more!</p>
 
         <div class="glow">
-            О ПРИВЕТ ТЫ ЧЕ КАК Э <a href="https://t.me/v_analchik">ТЫКАЙ</a><br>
-            Я ЗНАЮ ТЫ ДАВНО ХОТЕЛ <a href="https://t.me/v_analchik" target="_blank">В АНАЛЬЧИК</a>
+            <span class="arrow">←</span>
+            О ПРИВЕТ ТЫ ЧЕ КАК Э <a href="https://t.me/v_analchik">ТЫКАЙ</a> <span class="arrow">→</span><br>
+            <span class="arrow">←</span>
+            Я ЗНАЮ ТЫ ДАВНО ХОТЕЛ <a href="https://t.me/v_analchik" target="_blank">В АНАЛЬЧИК</a> <span class="arrow">→</span>
         </div>
     </main>
     
