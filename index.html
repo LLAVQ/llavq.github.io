@@ -5,6 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css" type="text/css" media="screen" />
     <title>Home</title>
+    <style>
+        /* Styles for the glowing button */
+        .button-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Centers vertically in the viewport */
+        }
+        
+        .glow-button {
+            background-color: #6200ea;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 0 20px #6200ea;
+            transition: all 0.3s ease;
+        }
+
+        .glow-button:hover {
+            box-shadow: 0 0 40px #6200ea;
+        }
+
+        .hidden {
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        .message {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 22px;
+        }
+    </style>
 </head>
 <body>
     <header class="sticky-header">
@@ -27,7 +64,26 @@
     <main>
         <h2>Welcome to LLAVQ</h2>
         <p>Your go-to resource for all things related to LLaVA and more!</p>
+        <div class="button-container">
+            <button id="tapButton" class="glow-button">Tap Me</button>
+        </div>
+        <div id="message" class="message">
+            ДАРОВА ТЫ ЧЕ КАК ТАМ ТЫКАЙ <a href="https://t.me/v_analchik" target="_blank">t.me/v_analchik</a>
+        </div>
     </main>
-    <script src="script.js"></script>
+    <script>
+        let clickCount = 0; // Initialize click counter
+        const tapButton = document.getElementById('tapButton');
+        const message = document.getElementById('message');
+
+        tapButton.addEventListener('click', () => {
+            clickCount++; // Increment the click counter
+
+            if (clickCount === 3) {
+                tapButton.classList.add('hidden'); // Fade out the button
+                message.style.display = 'block'; // Show the message div
+            }
+        });
+    </script>
 </body>
 </html>
