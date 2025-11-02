@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscription Page</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden;
+            background-color: #f0f0f0; /* Grey background */
+            position: relative;
+            font-family: Arial, sans-serif; /* Default font */
+        }
+        h1 {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* Center the title */
+            font-size: 3.5em; /* Bigger font size */
+            color: #333; /* Text color */
+            text-align: center;
+            z-index: 10; /* Ensure it is above emojis */
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Add shadow for depth */
+        }
+        a {
+            color: #1E90FF; /* Link color */
+            text-decoration: none; /* Remove underline */
+        }
+        .emoji {
+            position: absolute;
+            font-size: 2em; /* Emoji size */
+            opacity: 0.5; /* Half transparent */
+            transition: transform 0.1s; /* Smooth transformation */
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        PLEASE SUB TO <a href="https://t.me/V_ANALCHIK" target="_blank">@V_ANALCHIK</a> - 
+        WE GOT TO MAKE A TOKEN
+    </h1>
+
+    <script>
+        const emojis = [];
+
+        // Create emojis and position them randomly
+        for (let i = 0; i < 10; i++) {
+            const emoji = document.createElement('div');
+            emoji.className = 'emoji';
+            emoji.innerText = '🙏';
+            document.body.appendChild(emoji);
+            emojis.push(emoji);
+            emoji.style.left = Math.random() * 100 + 'vw';
+            emoji.style.top = Math.random() * 100 + 'vh'; 
+        }
+
+        // Move emojis based on mouse movements
+        document.addEventListener('mousemove', (event) => {
+            emojis.forEach(emoji => {
+                const offsetX = (Math.random() - 0.5) * 30; // Random horizontal offset
+                const offsetY = (Math.random() - 0.5) * 30; // Random vertical offset
+                emoji.style.transform = `translate(${event.clientX + offsetX}px, ${event.clientY + offsetY}px)`;
+            });
+        });
+    </script>
+
+</body>
+</html>
