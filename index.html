@@ -24,6 +24,14 @@
             animation: breathe 1.5s infinite alternate;
             color: yellow; /* Change the color of the arrows */
         }
+        a {
+            color: lime; /* Eww color for links */
+            text-decoration: underline;
+            transition: color 0.3s ease;
+        }
+        a:hover {
+            color: purple; /* Change color on hover for effect */
+        }
         @keyframes glow-animation {
             0% { box-shadow: 0 0 10px rgba(255, 255, 255, 0.5); }
             100% { box-shadow: 0 0 20px rgba(255, 255, 255, 1); }
