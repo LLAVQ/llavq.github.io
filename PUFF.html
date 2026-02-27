@@ -3,183 +3,140 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Virtual Lounge 2026</title>
+    <title>Realistic Lounge 2026</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        :root {
-            --tg-theme-bg-color: #1a1a1a;
-            --accent-gold: #d4af37;
-        }
-        body {
-            margin: 0; padding: 0;
-            background-color: var(--tg-theme-bg-color);
-            color: white; font-family: 'Segoe UI', Roboto, sans-serif;
-            overflow: hidden; touch-action: none;
-            display: flex; flex-direction: column; align-items: center;
-        }
-        #app-canvas { position: absolute; top: 0; left: 0; z-index: 1; }
-        .ui-layer {
-            position: relative; z-index: 10;
-            width: 100%; height: 100vh;
-            display: flex; flex-direction: column; justify-content: space-between;
-            padding: 20px; box-sizing: border-box;
-            pointer-events: none;
-        }
-        .header { text-align: center; pointer-events: auto; }
-        .menu {
-            display: flex; gap: 10px; overflow-x: auto;
-            padding: 10px; pointer-events: auto;
-        }
-        .item-card {
-            background: rgba(255,255,255,0.1);
-            padding: 15px; border-radius: 12px; min-width: 80px;
-            text-align: center; border: 1px solid rgba(255,255,255,0.1);
-        }
-        .controls {
-            display: flex; flex-direction: column; align-items: center;
-            gap: 20px; padding-bottom: 40px; pointer-events: auto;
-        }
-        .action-btn {
-            width: 80px; height: 80px; border-radius: 50%;
-            background: radial-gradient(circle, #444, #000);
-            border: 2px solid var(--accent-gold);
-            color: white; font-weight: bold; font-size: 12px;
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
-        }
-        .stars-btn {
-            background: linear-gradient(45deg, #0088cc, #00aaff);
-            color: white; border: none; padding: 10px 20px;
-            border-radius: 20px; font-weight: bold; pointer-events: auto;
-        }
+        body { margin: 0; background: #0f0f0f; color: white; font-family: sans-serif; overflow: hidden; touch-action: none; }
+        canvas { position: absolute; top: 0; left: 0; }
+        .ui { position: relative; z-index: 10; height: 100vh; display: flex; flex-direction: column; justify-content: space-between; padding: 30px; box-sizing: border-box; pointer-events: none; }
+        .controls { pointer-events: auto; display: flex; flex-direction: column; align-items: center; gap: 15px; }
+        .puff-btn { width: 100px; height: 100px; border-radius: 50%; border: 3px solid #d4af37; background: black; color: #d4af37; font-weight: bold; cursor: pointer; box-shadow: 0 0 20px rgba(212,175,55,0.3); }
+        .nav { pointer-events: auto; display: flex; gap: 10px; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 20px; }
+        .nav-item { cursor: pointer; padding: 10px; border-radius: 10px; transition: 0.3s; }
+        .nav-item:hover { background: rgba(255,255,255,0.1); }
     </style>
 </head>
 <body>
 
-<canvas id="app-canvas"></canvas>
+<canvas id="canvas"></canvas>
 
-<div class="ui-layer">
-    <div class="header">
-        <h2 id="item-title">Cuban Cigar</h2>
-        <p style="font-size: 12px; opacity: 0.6;">Tilt phone to slosh • Hold button to puff</p>
-    </div>
-
-    <div class="menu">
-        <div class="item-card" onclick="setItem('Cigar')">🚬<br>Cigar</div>
-        <div class="item-card" onclick="setItem('Vape')">💨<br>Vape</div>
-        <div class="item-card" onclick="setItem('Beer')">🍺<br>Beer</div>
-        <div class="item-card" onclick="setItem('Wine')">🍷<br>Wine</div>
+<div class="ui">
+    <div style="text-align: center;">
+        <h1 id="title" style="margin:0; font-weight: 300;">Cigar Lounge</h1>
+        <p id="status" style="color: #d4af37; font-size: 14px;">Hold to Inhale</p>
     </div>
 
     <div class="controls">
-        <button class="stars-btn" onclick="buyPremium()">Unlock Premium Assets ⭐</button>
-        <button class="action-btn" id="puffBtn">INHALING...</button>
+        <div class="nav">
+            <div class="nav-item" onclick="changeMode('Cigar')">🚬</div>
+            <div class="nav-item" onclick="changeMode('Vape')">💨</div>
+            <div class="nav-item" onclick="changeMode('Beer')">🍺</div>
+        </div>
+        <button class="puff-btn" id="mainAction">Puff</button>
     </div>
 </div>
 
 <script>
-    const tg = window.Telegram.WebApp;
-    tg.expand();
-
-    const canvas = document.getElementById('app-canvas');
+    const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
-    let width, height;
-    let currentItem = 'Cigar';
     let particles = [];
+    let mode = 'Cigar';
     let tilt = 0;
 
-    // Handle Orientation (Gyroscope)
-    window.addEventListener('deviceorientation', (e) => {
-        tilt = e.gamma / 45; // Normalize tilt
-    });
-
+    // Set canvas size
     function resize() {
-        width = canvas.width = window.innerWidth;
-        height = canvas.height = window.innerHeight;
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
     }
     window.addEventListener('resize', resize);
     resize();
 
-    function setItem(name) {
-        currentItem = name;
-        document.getElementById('item-title').innerText = name;
-        tg.HapticFeedback.impactOccurred('medium');
+    // Tilt Logic (Realistic Liquid)
+    window.addEventListener('deviceorientation', (e) => {
+        // Smooth tilt using Anime.js to "settle" the liquid
+        anime({
+            targets: { val: tilt },
+            val: e.gamma / 50,
+            duration: 500,
+            easing: 'easeOutElastic(1, .6)',
+            update: (anim) => { tilt = anim.animatables[0].target.val; }
+        });
+    });
+
+    function changeMode(newMode) {
+        mode = newMode;
+        document.getElementById('title').innerText = newMode + " Lounge";
+        particles = [];
     }
 
-    function buyPremium() {
-        // Logic for Telegram Stars / Payment Link
-        tg.showPopup({
-            title: 'Premium Pack',
-            message: 'Unlock 20+ Realistic Cigars and Drinks for 50 Stars?',
-            buttons: [{id: 'buy', type: 'default', text: 'Unlock Now'}]
+    // Realistic Smoke with Anime.js
+    function createSmoke() {
+        const smoke = {
+            x: window.innerWidth / 2,
+            y: window.innerHeight / 2,
+            size: mode === 'Vape' ? 40 : 15,
+            opacity: 0.8,
+            drift: (Math.random() - 0.5) * 100
+        };
+
+        // The "Secret Sauce": Animate the smoke object itself
+        anime({
+            targets: smoke,
+            x: smoke.x + smoke.drift + (tilt * 200),
+            y: smoke.y - 400,
+            size: smoke.size * 5,
+            opacity: 0,
+            duration: mode === 'Vape' ? 3000 : 5000,
+            easing: 'easeOutQuart',
+            begin: () => particles.push(smoke),
+            complete: () => {
+                particles = particles.filter(p => p !== smoke);
+            }
         });
     }
 
-    // Particle Logic for Smoke/Bubbles
-    class Particle {
-        constructor(x, y, color, type) {
-            this.x = x; this.y = y;
-            this.color = color;
-            this.type = type;
-            this.vx = (Math.random() - 0.5) * 2;
-            this.vy = type === 'smoke' ? -Math.random() * 3 : Math.random() * 2;
-            this.alpha = 1;
-            this.size = type === 'smoke' ? Math.random() * 20 + 10 : Math.random() * 5;
-        }
-        update() {
-            this.x += this.vx + tilt * 2;
-            this.y += this.vy;
-            this.alpha -= 0.01;
-        }
-        draw() {
-            ctx.globalAlpha = this.alpha;
-            ctx.fillStyle = this.color;
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-            ctx.fill();
-        }
-    }
-
-    let isPuffing = false;
-    const puffBtn = document.getElementById('puffBtn');
-    
-    puffBtn.addEventListener('touchstart', () => { 
-        isPuffing = true; 
-        tg.HapticFeedback.impactOccurred('heavy');
+    // Interaction
+    const btn = document.getElementById('mainAction');
+    let interval;
+    btn.addEventListener('touchstart', () => {
+        interval = setInterval(createSmoke, 100);
+        document.getElementById('status').innerText = "Inhaling...";
     });
-    puffBtn.addEventListener('touchend', () => { isPuffing = false; });
+    btn.addEventListener('touchend', () => {
+        clearInterval(interval);
+        document.getElementById('status').innerText = "Exhaling...";
+    });
 
-    function drawLounge() {
-        ctx.clearRect(0, 0, width, height);
+    // Render Loop
+    function render() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // Draw Liquid (Beer/Wine)
-        if (currentItem === 'Beer' || currentItem === 'Wine') {
-            const liquidColor = currentItem === 'Beer' ? '#fbbf24' : '#720e0e';
-            ctx.fillStyle = liquidColor;
+        // Draw Liquid
+        if (mode === 'Beer') {
+            ctx.fillStyle = '#f39c12';
             ctx.beginPath();
-            const level = height * 0.6 + (tilt * 50);
-            ctx.moveTo(0, level);
-            ctx.lineTo(width, level - (tilt * 100));
-            ctx.lineTo(width, height);
-            ctx.lineTo(0, height);
+            let level = canvas.height * 0.7;
+            ctx.moveTo(0, level + (tilt * 100));
+            ctx.lineTo(canvas.width, level - (tilt * 100));
+            ctx.lineTo(canvas.width, canvas.height);
+            ctx.lineTo(0, canvas.height);
             ctx.fill();
-            
-            // Random Bubbles
-            if (Math.random() > 0.8) particles.push(new Particle(Math.random() * width, height, 'rgba(255,255,255,0.3)', 'bubble'));
         }
 
-        // Generate Smoke
-        if (isPuffing && (currentItem === 'Cigar' || currentItem === 'Vape')) {
-            const smokeColor = currentItem === 'Vape' ? 'white' : '#888';
-            particles.push(new Particle(width/2, height/2, smokeColor, 'smoke'));
-        }
+        // Draw Smoke
+        particles.forEach(p => {
+            ctx.globalAlpha = p.opacity;
+            ctx.fillStyle = mode === 'Vape' ? '#fff' : '#aaa';
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fill();
+        });
 
-        particles = particles.filter(p => p.alpha > 0);
-        particles.forEach(p => { p.update(); p.draw(); });
-
-        requestAnimationFrame(drawLounge);
+        requestAnimationFrame(render);
     }
+    render();
 
-    drawLounge();
 </script>
 </body>
 </html>
