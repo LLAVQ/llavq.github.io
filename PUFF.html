@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Digital Breath</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            background: #1a1a1a;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: sans-serif;
+            overflow: hidden;
+        }
+        #smoke-container {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 60%;
+        }
+        .breathe-btn {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: none;
+            background: radial-gradient(circle, #555, #222);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(255,255,255,0.1);
+            transition: transform 0.1s;
+            z-index: 10;
+        }
+        .breathe-btn:active {
+            transform: scale(0.9);
+            background: radial-gradient(circle, #888, #333);
+        }
+        .stats { margin-top: 20px; text-align: center; }
+    </style>
+</head>
+<body>
+
+    <div id="smoke-container"></div>
+    
+    <h1>Дыши вместо курения</h1>
+    <button class="breathe-btn" id="mainBtn">ВДОХ</button>
+    
+    <div class="stats">
+        <p>Сэкономлено: <span id="savedMoney">0</span>$</p>
+        <p>Чистых легких: <span id="puffs">0</span> затяжек</p>
+    </div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand(); // Раскрыть на весь экран
+
+        let puffs = 0;
+        const btn = document.getElementById('mainBtn');
+        const puffsDisplay = document.getElementById('puffs');
+        const moneyDisplay = document.getElementById('savedMoney');
+
+        // Логика нажатия
+        btn.addEventListener('touchstart', () => {
+            btn.textContent = "ВЫДОХ";
+            // Тут можно запустить анимацию дыма
+        });
+
+        btn.addEventListener('touchend', () => {
+            btn.textContent = "ВДОХ";
+            puffs++;
+            puffsDisplay.textContent = puffs;
+            moneyDisplay.textContent = (puffs * 0.15).toFixed(2); // Пример стоимости одной сигареты
+            
+            // Легкая вибрация телефона через TG API
+            if (tg.HapticFeedback) {
+                tg.HapticFeedback.impactOccurred('medium');
+            }
+        });
+    </script>
+</body>
+</html>
