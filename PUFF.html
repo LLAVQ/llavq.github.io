@@ -3,140 +3,216 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Realistic Lounge 2026</title>
+    <title>Virtual Lounge 2026</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body { margin: 0; background: #0f0f0f; color: white; font-family: sans-serif; overflow: hidden; touch-action: none; }
-        canvas { position: absolute; top: 0; left: 0; }
-        .ui { position: relative; z-index: 10; height: 100vh; display: flex; flex-direction: column; justify-content: space-between; padding: 30px; box-sizing: border-box; pointer-events: none; }
-        .controls { pointer-events: auto; display: flex; flex-direction: column; align-items: center; gap: 15px; }
-        .puff-btn { width: 100px; height: 100px; border-radius: 50%; border: 3px solid #d4af37; background: black; color: #d4af37; font-weight: bold; cursor: pointer; box-shadow: 0 0 20px rgba(212,175,55,0.3); }
-        .nav { pointer-events: auto; display: flex; gap: 10px; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 20px; }
-        .nav-item { cursor: pointer; padding: 10px; border-radius: 10px; transition: 0.3s; }
-        .nav-item:hover { background: rgba(255,255,255,0.1); }
+        :root {
+            --accent: #d4af37;
+            --bg: #0a0a0a;
+        }
+        body {
+            margin: 0; padding: 0; background: var(--bg);
+            color: white; font-family: 'Inter', sans-serif;
+            overflow: hidden; touch-action: none;
+        }
+        canvas { position: absolute; top: 0; left: 0; z-index: 1; }
+        .ui {
+            position: relative; z-index: 10; height: 100vh;
+            display: flex; flex-direction: column; justify-content: space-between;
+            padding: 40px 20px; box-sizing: border-box; pointer-events: none;
+        }
+        .header { text-align: center; pointer-events: auto; }
+        .header h1 { margin: 0; font-size: 24px; letter-spacing: 2px; font-weight: 300; }
+        #status { color: var(--accent); font-size: 14px; text-transform: uppercase; margin-top: 5px; }
+
+        .controls {
+            display: flex; flex-direction: column; align-items: center;
+            gap: 20px; pointer-events: auto;
+        }
+        .nav {
+            display: flex; gap: 15px; background: rgba(255,255,255,0.05);
+            padding: 10px 20px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1);
+        }
+        .nav-item { font-size: 24px; cursor: pointer; transition: transform 0.2s; }
+        .nav-item:active { transform: scale(1.3); }
+
+        .main-btn {
+            width: 110px; height: 110px; border-radius: 50%;
+            border: 2px solid var(--accent); background: black;
+            color: var(--accent); font-weight: bold; font-size: 14px;
+            box-shadow: 0 0 25px rgba(212, 175, 55, 0.2);
+            cursor: pointer; outline: none;
+        }
+        .main-btn:active { background: #111; transform: scale(0.95); }
+        
+        #refill-btn {
+            background: var(--accent); color: black; border: none;
+            padding: 10px 20px; border-radius: 20px; font-weight: bold;
+            display: none; pointer-events: auto;
+        }
     </style>
 </head>
 <body>
 
-<canvas id="canvas"></canvas>
+<canvas id="loungeCanvas"></canvas>
 
 <div class="ui">
-    <div style="text-align: center;">
-        <h1 id="title" style="margin:0; font-weight: 300;">Cigar Lounge</h1>
-        <p id="status" style="color: #d4af37; font-size: 14px;">Hold to Inhale</p>
+    <div class="header">
+        <h1 id="item-title">CIGAR LOUNGE</h1>
+        <div id="status">Hold to Inhale</div>
     </div>
 
     <div class="controls">
+        <button id="refill-btn" onclick="refill()">REFILL (5 STARS ⭐)</button>
         <div class="nav">
             <div class="nav-item" onclick="changeMode('Cigar')">🚬</div>
             <div class="nav-item" onclick="changeMode('Vape')">💨</div>
             <div class="nav-item" onclick="changeMode('Beer')">🍺</div>
         </div>
-        <button class="puff-btn" id="mainAction">Puff</button>
+        <button class="main-btn" id="actionBtn">PUFF</button>
     </div>
 </div>
 
 <script>
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
-    let particles = [];
-    let mode = 'Cigar';
-    let tilt = 0;
+    const tg = window.Telegram.WebApp;
+    tg.expand();
 
-    // Set canvas size
-    function resize() {
+    const canvas = document.getElementById('loungeCanvas');
+    const ctx = canvas.getContext('2d');
+    const actionBtn = document.getElementById('actionBtn');
+    const statusText = document.getElementById('status');
+    const refillBtn = document.getElementById('refill-btn');
+
+    let mode = 'Cigar';
+    let particles = [];
+    let tilt = 0;
+    let beerLevel = 0.7; // 70% full
+    let isActive = false;
+    let actionInterval;
+
+    // Resize
+    function init() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
     }
-    window.addEventListener('resize', resize);
-    resize();
+    window.addEventListener('resize', init);
+    init();
 
-    // Tilt Logic (Realistic Liquid)
-    window.addEventListener('deviceorientation', (e) => {
-        // Smooth tilt using Anime.js to "settle" the liquid
-        anime({
-            targets: { val: tilt },
-            val: e.gamma / 50,
-            duration: 500,
-            easing: 'easeOutElastic(1, .6)',
-            update: (anim) => { tilt = anim.animatables[0].target.val; }
+    // Smooth Tilt Physics via Anime.js
+    if (window.DeviceOrientationEvent) {
+        window.addEventListener('deviceorientation', (e) => {
+            anime({
+                targets: { t: tilt },
+                t: e.gamma / 50,
+                duration: 500,
+                easing: 'easeOutQuad',
+                update: (anim) => { tilt = anim.animatables[0].target.t; }
+            });
         });
-    });
-
-    function changeMode(newMode) {
-        mode = newMode;
-        document.getElementById('title').innerText = newMode + " Lounge";
-        particles = [];
     }
 
-    // Realistic Smoke with Anime.js
-    function createSmoke() {
-        const smoke = {
-            x: window.innerWidth / 2,
-            y: window.innerHeight / 2,
-            size: mode === 'Vape' ? 40 : 15,
-            opacity: 0.8,
-            drift: (Math.random() - 0.5) * 100
-        };
+    function changeMode(m) {
+        mode = m;
+        document.getElementById('item-title').innerText = m.toUpperCase() + " LOUNGE";
+        actionBtn.innerText = (m === 'Beer') ? "DRINK" : "PUFF";
+        statusText.innerText = (m === 'Beer') ? "Hold to Sip" : "Hold to Inhale";
+        refillBtn.style.display = (m === 'Beer' && beerLevel <= 0.1) ? 'block' : 'none';
+        tg.HapticFeedback.impactOccurred('medium');
+    }
 
-        // The "Secret Sauce": Animate the smoke object itself
+    function createSmoke() {
+        const p = {
+            x: canvas.width / 2,
+            y: canvas.height / 2,
+            size: mode === 'Vape' ? 30 : 12,
+            opacity: 0.8
+        };
         anime({
-            targets: smoke,
-            x: smoke.x + smoke.drift + (tilt * 200),
-            y: smoke.y - 400,
-            size: smoke.size * 5,
+            targets: p,
+            x: p.x + (Math.random() - 0.5) * 200 + (tilt * 150),
+            y: p.y - 500,
+            size: p.size * 5,
             opacity: 0,
             duration: mode === 'Vape' ? 3000 : 5000,
-            easing: 'easeOutQuart',
-            begin: () => particles.push(smoke),
-            complete: () => {
-                particles = particles.filter(p => p !== smoke);
-            }
+            easing: 'easeOutCubic',
+            begin: () => particles.push(p),
+            complete: () => particles = particles.filter(item => item !== p)
         });
     }
 
-    // Interaction
-    const btn = document.getElementById('mainAction');
-    let interval;
-    btn.addEventListener('touchstart', () => {
-        interval = setInterval(createSmoke, 100);
-        document.getElementById('status').innerText = "Inhaling...";
-    });
-    btn.addEventListener('touchend', () => {
-        clearInterval(interval);
-        document.getElementById('status').innerText = "Exhaling...";
+    // Button Logic
+    actionBtn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        isActive = true;
+        if (mode === 'Beer') {
+            if (beerLevel > 0.1) {
+                statusText.innerText = "Drinking...";
+                tg.HapticFeedback.impactOccurred('light');
+                actionInterval = setInterval(() => {
+                    beerLevel -= 0.005;
+                    if (beerLevel <= 0.1) {
+                        clearInterval(actionInterval);
+                        refillBtn.style.display = 'block';
+                        statusText.innerText = "Empty!";
+                    }
+                }, 50);
+            }
+        } else {
+            statusText.innerText = "Inhaling...";
+            tg.HapticFeedback.impactOccurred('medium');
+            actionInterval = setInterval(createSmoke, 100);
+        }
     });
 
-    // Render Loop
-    function render() {
+    actionBtn.addEventListener('touchend', () => {
+        isActive = false;
+        clearInterval(actionInterval);
+        if (mode !== 'Beer' || beerLevel > 0.1) {
+            statusText.innerText = (mode === 'Beer') ? "Hold to Sip" : "Hold to Inhale";
+        }
+    });
+
+    function refill() {
+        // Here you would trigger tg.openInvoice or a payment link
+        tg.HapticFeedback.notificationOccurred('success');
+        beerLevel = 0.7;
+        refillBtn.style.display = 'none';
+        statusText.innerText = "Hold to Sip";
+    }
+
+    function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         // Draw Liquid
         if (mode === 'Beer') {
             ctx.fillStyle = '#f39c12';
+            const surfaceY = canvas.height * (1 - beerLevel);
             ctx.beginPath();
-            let level = canvas.height * 0.7;
-            ctx.moveTo(0, level + (tilt * 100));
-            ctx.lineTo(canvas.width, level - (tilt * 100));
+            ctx.moveTo(0, surfaceY + (tilt * 80));
+            ctx.lineTo(canvas.width, surfaceY - (tilt * 80));
             ctx.lineTo(canvas.width, canvas.height);
             ctx.lineTo(0, canvas.height);
             ctx.fill();
+
+            // Foam
+            ctx.fillStyle = 'rgba(255,255,255,0.7)';
+            ctx.fillRect(0, surfaceY + (tilt * 80) - 5, canvas.width, 10);
         }
 
-        // Draw Smoke
+        // Draw Particles
         particles.forEach(p => {
             ctx.globalAlpha = p.opacity;
-            ctx.fillStyle = mode === 'Vape' ? '#fff' : '#aaa';
+            ctx.fillStyle = mode === 'Vape' ? '#fff' : '#999';
             ctx.beginPath();
             ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
             ctx.fill();
         });
 
-        requestAnimationFrame(render);
+        requestAnimationFrame(draw);
     }
-    render();
 
+    draw();
 </script>
 </body>
 </html>
