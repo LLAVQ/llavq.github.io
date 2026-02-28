@@ -3,157 +3,208 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Virtual Lounge Pro 2026</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
+    <title>Virtual Lounge TMA</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        :root { --accent: #d4af37; --bg: #0a0a0a; }
-        body { margin: 0; background: var(--bg); color: white; font-family: sans-serif; overflow: hidden; touch-action: none; }
-        canvas { position: absolute; top: 0; left: 0; z-index: 1; }
-        .ui { position: relative; z-index: 10; height: 100vh; display: flex; flex-direction: column; justify-content: space-between; padding: 40px 20px; box-sizing: border-box; pointer-events: none; }
-        .controls { display: flex; flex-direction: column; align-items: center; gap: 20px; pointer-events: auto; }
-        .nav { display: flex; gap: 15px; background: rgba(255,255,255,0.05); padding: 10px 20px; border-radius: 30px; }
-        .nav-item { font-size: 24px; cursor: pointer; }
-        .main-btn { width: 110px; height: 110px; border-radius: 50%; border: 2px solid var(--accent); background: black; color: var(--accent); font-weight: bold; box-shadow: 0 0 20px rgba(212,175,55,0.2); }
+        :root {
+            --bg-color: #1a1a1a;
+            --beer-gold: #f39c12;
+            --foam-white: #ffffff;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: white;
+            font-family: sans-serif;
+            overflow: hidden;
+            touch-action: none;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        #app-container {
+            flex: 1;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* --- Beer Styles --- */
+        .glass {
+            width: 150px;
+            height: 250px;
+            border: 4px solid #fff;
+            border-top: none;
+            border-radius: 0 0 20px 20px;
+            position: relative;
+            overflow: hidden;
+            display: none;
+        }
+
+        #liquid {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 90%;
+            background: var(--beer-gold);
+            transition: height 0.1s linear;
+        }
+
+        #foam {
+            position: absolute;
+            top: -20px;
+            width: 100%;
+            height: 40px;
+            background: var(--foam-white);
+            border-radius: 50%;
+        }
+
+        /* --- Vape/Cigarette Styles --- */
+        #smoke-source {
+            width: 40px;
+            height: 150px;
+            background: #444;
+            border-radius: 5px;
+            display: none;
+            position: relative;
+        }
+
+        .vape-tip { width: 40px; height: 10px; background: #222; position: absolute; top: -10px; }
+
+        /* --- Smoke Particles --- */
+        .particle {
+            position: absolute;
+            background: rgba(200, 200, 200, 0.5);
+            border-radius: 50%;
+            pointer-events: none;
+            filter: blur(8px);
+        }
+
+        /* --- Navigation --- */
+        .nav {
+            display: flex;
+            background: #333;
+            padding: 10px;
+            justify-content: space-around;
+        }
+
+        button {
+            padding: 10px;
+            background: #555;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .active { background: #0088cc; }
     </style>
 </head>
 <body>
 
-<canvas id="loungeCanvas"></canvas>
-
-<div class="ui">
-    <div style="text-align: center; pointer-events: auto;">
-        <h1 id="item-title" style="margin:0; font-weight: 300;">CIGAR LOUNGE</h1>
-        <div id="status" style="color: var(--accent); font-size: 14px;">Hold to Inhale</div>
-    </div>
-
-    <div class="controls">
-        <div class="nav">
-            <div class="nav-item" onclick="changeMode('Cigar')">🚬</div>
-            <div class="nav-item" onclick="changeMode('Vape')">💨</div>
-            <div class="nav-item" onclick="changeMode('Beer')">🍺</div>
+    <div id="app-container">
+        <div id="beer-glass" class="glass">
+            <div id="liquid">
+                <div id="foam"></div>
+            </div>
         </div>
-        <button class="main-btn" id="actionBtn">ACTION</button>
+
+        <div id="vape-device" id="smoke-source">
+            <div class="vape-tip"></div>
+            <div style="padding: 20px 5px; text-align: center; font-size: 10px;">VAPE</div>
+        </div>
     </div>
-</div>
 
-<script>
-    const tg = window.Telegram.WebApp;
-    tg.expand();
+    <div class="nav">
+        <button onclick="switchMode('beer')" id="btn-beer">Beer</button>
+        <button onclick="switchMode('vape')" id="btn-vape">Vape</button>
+    </div>
 
-    const canvas = document.getElementById('loungeCanvas');
-    const ctx = canvas.getContext('2d');
-    const actionBtn = document.getElementById('actionBtn');
-    const statusText = document.getElementById('status');
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand();
 
-    let mode = 'Cigar';
-    let particles = [];
-    let beerLevel = 0.7;
-    let actionInterval;
+        let mode = 'beer';
+        let beerLevel = 90;
+        let isPressing = false;
 
-    // --- AUDIO SYSTEM ---
-    // Note: In a real app, replace these URLs with your own hosted .mp3 files
-    const sounds = {
-        inhale: new Howl({ src: ['https://assets.mixkit.co/sfx/preview/mixkit-fire-swoosh-2357.mp3'], volume: 0.5 }),
-        exhale: new Howl({ src: ['https://assets.mixkit.co/sfx/preview/mixkit-wind-light-whoosh-1482.mp3'], volume: 0.8 }),
-        gulp: new Howl({ src: ['https://assets.mixkit.co/sfx/preview/mixkit-swallow-liquid-single-2011.mp3'], volume: 0.6, loop: true }),
-        sigh: new Howl({ src: ['https://assets.mixkit.co/sfx/preview/mixkit-human-sigh-of-relief-468.mp3'], volume: 0.7 })
-    };
-
-    function init() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', init);
-    init();
-
-    function changeMode(m) {
-        mode = m;
-        document.getElementById('item-title').innerText = m.toUpperCase() + " LOUNGE";
-        actionBtn.innerText = (m === 'Beer') ? "DRINK" : "PUFF";
-        tg.HapticFeedback.impactOccurred('medium');
-    }
-
-    function createSmoke(isExhale = false) {
-        const count = isExhale ? 15 : 1; // More smoke on release
-        for(let i=0; i<count; i++) {
-            const p = {
-                x: canvas.width / 2,
-                y: canvas.height / 2,
-                size: mode === 'Vape' ? 30 : 12,
-                opacity: 0.8,
-                vx: (Math.random() - 0.5) * (isExhale ? 10 : 2)
-            };
-            anime({
-                targets: p,
-                x: p.x + p.vx * 50,
-                y: p.y - 600,
-                size: p.size * 6,
-                opacity: 0,
-                duration: isExhale ? 2000 : 4000,
-                easing: 'easeOutCubic',
-                begin: () => particles.push(p),
-                complete: () => particles = particles.filter(item => item !== p)
-            });
-        }
-    }
-
-    // --- INPUT LOGIC ---
-    actionBtn.addEventListener('touchstart', (e) => {
-        e.preventDefault();
-        if (mode === 'Beer') {
-            if (beerLevel > 0.1) {
-                sounds.gulp.play();
-                actionInterval = setInterval(() => {
-                    beerLevel -= 0.005;
-                    tg.HapticFeedback.impactOccurred('light');
-                    if (beerLevel <= 0.1) stopAction();
-                }, 100);
+        function switchMode(newMode) {
+            mode = newMode;
+            document.getElementById('beer-glass').style.display = newMode === 'beer' ? 'block' : 'none';
+            document.getElementById('vape-device').style.display = newMode === 'vape' ? 'block' : 'none';
+            document.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+            document.getElementById(`btn-${newMode}`).classList.add('active');
+            
+            // Request Permission for Motion on iOS
+            if (newMode === 'beer' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+                DeviceOrientationEvent.requestPermission();
             }
-        } else {
-            sounds.inhale.play();
-            actionInterval = setInterval(createSmoke, 150);
-            tg.HapticFeedback.impactOccurred('medium');
         }
-    });
 
-    actionBtn.addEventListener('touchend', stopAction);
-
-    function stopAction() {
-        clearInterval(actionInterval);
-        if (mode === 'Beer') {
-            sounds.gulp.stop();
-            sounds.sigh.play();
-        } else {
-            sounds.inhale.stop();
-            sounds.exhale.play();
-            createSmoke(true); // Big smoke burst on release
-        }
-        tg.HapticFeedback.notificationOccurred('success');
-    }
-
-    function draw() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        if (mode === 'Beer') {
-            ctx.fillStyle = '#f39c12';
-            const surfaceY = canvas.height * (1 - beerLevel);
-            ctx.beginPath();
-            ctx.moveTo(0, surfaceY); ctx.lineTo(canvas.width, surfaceY);
-            ctx.lineTo(canvas.width, canvas.height); ctx.lineTo(0, canvas.height);
-            ctx.fill();
-            // Foam
-            ctx.fillStyle = 'white'; ctx.globalAlpha = 0.5;
-            ctx.fillRect(0, surfaceY - 5, canvas.width, 10); ctx.globalAlpha = 1;
-        }
-        particles.forEach(p => {
-            ctx.globalAlpha = p.opacity;
-            ctx.fillStyle = mode === 'Vape' ? '#fff' : '#999';
-            ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill();
+        // --- Beer Pouring Logic ---
+        window.addEventListener('deviceorientation', (event) => {
+            if (mode !== 'beer') return;
+            
+            // Adjusting for "pouring" angle (beta is front/back tilt)
+            let tilt = event.beta; 
+            if (tilt > 100 || tilt < -100) { // Device is upside down/tilted
+                beerLevel -= 0.5;
+                if (beerLevel < 0) beerLevel = 0;
+                document.getElementById('liquid').style.height = beerLevel + "%";
+            }
         });
-        requestAnimationFrame(draw);
-    }
-    draw();
-</script>
+
+        // --- Vape Smoke Logic ---
+        const container = document.getElementById('app-container');
+
+        function createSmoke() {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            const size = Math.random() * 40 + 20;
+            p.style.width = size + 'px';
+            p.style.height = size + 'px';
+            
+            // Center of screen
+            p.style.left = (window.innerWidth / 2 - size / 2) + 'px';
+            p.style.top = (window.innerHeight / 2) + 'px';
+            
+            container.appendChild(p);
+
+            let opacity = 0.5;
+            let scale = 1;
+            let y = window.innerHeight / 2;
+
+            const anim = setInterval(() => {
+                opacity -= 0.01;
+                scale += 0.02;
+                y -= 2;
+                p.style.opacity = opacity;
+                p.style.transform = `scale(${scale})`;
+                p.style.top = y + 'px';
+
+                if (opacity <= 0) {
+                    clearInterval(anim);
+                    p.remove();
+                }
+            }, 20);
+        }
+
+        // Release "Vapor" burst on release
+        window.addEventListener('touchstart', () => { isPressing = true; });
+        window.addEventListener('touchend', () => { 
+            if(mode === 'vape' && isPressing) {
+                for(let i=0; i<15; i++) {
+                    setTimeout(createSmoke, i * 50);
+                }
+            }
+            isPressing = false;
+        });
+
+        // Default start
+        switchMode('beer');
+    </script>
 </body>
 </html>
